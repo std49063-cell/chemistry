@@ -3,566 +3,431 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Chem Game - เคมี ม.4</title>
+
+<title>Chem Game - Sci-Fi</title>
 
 <style>
     * {
+        margin: 0;
+        padding: 0;
         box-sizing: border-box;
     }
 
     body {
-        margin: 0;
-        font-family: "Tahoma", sans-serif;
-        background: #f1f8f4;
-        color: #1f3d2b;
-    }
-
-    header {
-        background: #198754;
+        font-family: Arial, Helvetica, sans-serif;
+        background: #020b08;
         color: white;
-        text-align: center;
-        padding: 30px 15px;
+        overflow: hidden;
     }
 
-    header h1 {
-        margin: 0 0 10px;
-        font-size: 32px;
+    /* พื้นหลังเต็มหน้าจอ */
+    .screen {
+        width: 100vw;
+        height: 100vh;
+        position: relative;
+        overflow: hidden;
+        background:
+            radial-gradient(circle at center, #063c2d 0%, #021812 35%, #010806 75%);
     }
 
-    header p {
-        margin: 0;
-        font-size: 17px;
+    /* แสงวงกลมด้านหลัง */
+    .glow {
+        position: absolute;
+        width: 650px;
+        height: 650px;
+        border-radius: 50%;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        background: rgba(0, 255, 170, 0.08);
+        box-shadow:
+            0 0 80px rgba(0, 255, 170, 0.2),
+            0 0 180px rgba(0, 255, 170, 0.1);
     }
 
-    .container {
-        width: 90%;
-        max-width: 900px;
-        margin: 25px auto;
+    /* เส้นตาราง Sci-Fi */
+    .grid {
+        position: absolute;
+        inset: 0;
+        background-image:
+            linear-gradient(rgba(0,255,170,0.06) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(0,255,170,0.06) 1px, transparent 1px);
+        background-size: 50px 50px;
+        transform: perspective(500px) rotateX(60deg) scale(1.5);
+        transform-origin: center bottom;
+        opacity: 0.5;
     }
 
-    .info {
-        background: white;
-        border-left: 6px solid #198754;
-        padding: 18px;
-        border-radius: 10px;
-        margin-bottom: 20px;
-        box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+    /* เส้นตกแต่ง */
+    .line {
+        position: absolute;
+        background: #00ffae;
+        opacity: 0.5;
+        box-shadow: 0 0 10px #00ffae;
     }
 
-    .question {
-        background: white;
-        padding: 22px;
-        margin-bottom: 18px;
-        border-radius: 12px;
-        box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+    .line1 {
+        width: 220px;
+        height: 1px;
+        top: 20%;
+        left: 5%;
     }
 
-    .question h3 {
-        margin-top: 0;
-        color: #146c43;
+    .line2 {
+        width: 150px;
+        height: 1px;
+        bottom: 20%;
+        right: 5%;
     }
 
-    label {
-        display: block;
-        background: #f4faf6;
-        border: 1px solid #cfe8d8;
-        padding: 12px;
-        margin: 8px 0;
-        border-radius: 8px;
-        cursor: pointer;
-        transition: 0.2s;
-    }
-
-    label:hover {
-        background: #dff3e7;
-    }
-
-    input[type="radio"] {
-        margin-right: 10px;
-    }
-
-    button {
+    /* เนื้อหาหลัก */
+    .content {
+        position: absolute;
+        z-index: 10;
         width: 100%;
-        background: #198754;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+    }
+
+    .subtitle {
+        color: #00ffae;
+        font-size: 15px;
+        letter-spacing: 6px;
+        margin-bottom: 15px;
+        text-shadow: 0 0 15px #00ffae;
+    }
+
+    h1 {
+        font-size: clamp(60px, 9vw, 130px);
+        letter-spacing: 8px;
+        margin-bottom: 5px;
+
         color: white;
-        border: none;
-        padding: 16px;
-        border-radius: 10px;
-        font-size: 19px;
-        cursor: pointer;
-        margin: 15px 0 30px;
+
+        text-shadow:
+            0 0 5px #fff,
+            0 0 15px #00ffae,
+            0 0 35px #00ffae,
+            0 0 70px #00ffae;
     }
 
-    button:hover {
-        background: #146c43;
+    .thai-title {
+        font-size: 20px;
+        letter-spacing: 5px;
+        color: #b9ffe9;
+        margin-bottom: 45px;
     }
 
-    #result {
-        display: none;
-        background: white;
-        padding: 25px;
-        border-radius: 12px;
-        box-shadow: 0 3px 12px rgba(0,0,0,0.1);
-        margin-bottom: 30px;
-    }
+    /* ปุ่ม Login */
+    .login-btn {
+        width: 250px;
+        padding: 18px 30px;
 
-    .score {
-        font-size: 28px;
-        font-weight: bold;
-        color: #198754;
-        text-align: center;
-    }
+        background: rgba(0, 255, 174, 0.08);
 
-    .answer {
-        background: #f1f8f4;
-        border-left: 5px solid #198754;
-        padding: 15px;
-        margin: 15px 0;
+        border: 2px solid #00ffae;
         border-radius: 8px;
-    }
 
-    .correct {
-        color: #198754;
+        color: #00ffae;
+        font-size: 20px;
         font-weight: bold;
+        letter-spacing: 4px;
+
+        cursor: pointer;
+
+        box-shadow:
+            0 0 10px rgba(0,255,174,0.5),
+            inset 0 0 10px rgba(0,255,174,0.1);
+
+        transition: 0.3s;
     }
 
-    .wrong {
-        color: #dc3545;
+    .login-btn:hover {
+        background: #00ffae;
+        color: #00130d;
+
+        box-shadow:
+            0 0 20px #00ffae,
+            0 0 50px #00ffae;
+
+        transform: scale(1.05);
+    }
+
+    /* สัญลักษณ์เคมี */
+    .chemical {
+        position: absolute;
+        color: #00ffae;
         font-weight: bold;
+        opacity: 0.65;
+        text-shadow: 0 0 15px #00ffae;
+        animation: float 5s infinite ease-in-out;
     }
 
-    footer {
-        text-align: center;
-        padding: 20px;
-        color: #527563;
+    .c1 {
+        left: 8%;
+        top: 30%;
+        font-size: 55px;
+    }
+
+    .c2 {
+        right: 10%;
+        top: 22%;
+        font-size: 45px;
+    }
+
+    .c3 {
+        left: 14%;
+        bottom: 17%;
+        font-size: 35px;
+    }
+
+    .c4 {
+        right: 14%;
+        bottom: 15%;
+        font-size: 55px;
+    }
+
+    .c5 {
+        left: 25%;
+        top: 12%;
+        font-size: 25px;
+    }
+
+    .c6 {
+        right: 27%;
+        bottom: 12%;
+        font-size: 25px;
+    }
+
+    @keyframes float {
+        0%, 100% {
+            transform: translateY(0px);
+        }
+
+        50% {
+            transform: translateY(-20px);
+        }
+    }
+
+    /* โมเลกุลตรงกลาง */
+    .molecule {
+        position: absolute;
+        width: 500px;
+        height: 300px;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 1;
+        opacity: 0.25;
+    }
+
+    .atom {
+        position: absolute;
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        background: #00ffae;
+        box-shadow:
+            0 0 15px #00ffae,
+            0 0 35px #00ffae;
+    }
+
+    .a1 {
+        left: 40%;
+        top: 20%;
+    }
+
+    .a2 {
+        left: 20%;
+        top: 60%;
+    }
+
+    .a3 {
+        left: 65%;
+        top: 65%;
+    }
+
+    .a4 {
+        left: 75%;
+        top: 20%;
+    }
+
+    .bond {
+        position: absolute;
+        height: 3px;
+        background: #00ffae;
+        transform-origin: left center;
+        box-shadow: 0 0 10px #00ffae;
+    }
+
+    .b1 {
+        width: 130px;
+        left: 28%;
+        top: 48%;
+        transform: rotate(25deg);
+    }
+
+    .b2 {
+        width: 120px;
+        left: 43%;
+        top: 35%;
+        transform: rotate(50deg);
+    }
+
+    .b3 {
+        width: 100px;
+        left: 60%;
+        top: 50%;
+        transform: rotate(-35deg);
+    }
+
+    /* ข้อความมุมจอ */
+    .status {
+        position: absolute;
+        z-index: 20;
+        top: 25px;
+        left: 30px;
+
+        color: #00ffae;
+        font-size: 12px;
+        letter-spacing: 2px;
+    }
+
+    .status::before {
+        content: "● ";
+        animation: blink 1s infinite;
+    }
+
+    @keyframes blink {
+        50% {
+            opacity: 0.2;
+        }
+    }
+
+    .version {
+        position: absolute;
+        bottom: 20px;
+        left: 30px;
+        color: #4b8976;
+        font-size: 11px;
+        letter-spacing: 2px;
+    }
+
+    .sdg {
+        position: absolute;
+        bottom: 20px;
+        right: 30px;
+        color: #4b8976;
+        font-size: 11px;
+        letter-spacing: 2px;
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+
+        h1 {
+            font-size: 55px;
+            letter-spacing: 4px;
+        }
+
+        .thai-title {
+            font-size: 14px;
+        }
+
+        .login-btn {
+            width: 210px;
+        }
+
+        .chemical {
+            opacity: 0.35;
+        }
     }
 </style>
 </head>
 
 <body>
 
-<header>
-    <h1>🧪 Chem Game</h1>
-    <p>เกมตอบคำถามวิชาเคมี ระดับชั้น ม.4</p>
-</header>
+<div class="screen">
 
-<div class="container">
+    <!-- พื้นหลัง -->
+    <div class="grid"></div>
+    <div class="glow"></div>
 
-    <div class="info">
-        <b>📚 คำชี้แจง</b>
-        <p>เลือกคำตอบที่ถูกต้องที่สุดเพียง 1 ข้อ จำนวน 20 ข้อ</p>
-        <p>คะแนนเต็ม 20 คะแนน</p>
+    <!-- เส้นตกแต่ง -->
+    <div class="line line1"></div>
+    <div class="line line2"></div>
+
+    <!-- สถานะ -->
+    <div class="status">
+        SYSTEM ONLINE
     </div>
 
-    <form id="quizForm">
+    <!-- สัญลักษณ์เคมี -->
+    <div class="chemical c1">H₂</div>
+    <div class="chemical c2">O₂</div>
+    <div class="chemical c3">Na⁺</div>
+    <div class="chemical c4">Cl⁻</div>
+    <div class="chemical c5">C₆H₁₂O₆</div>
+    <div class="chemical c6">H₂O</div>
 
-        <!-- ข้อ 1 -->
-        <div class="question">
-            <h3>ข้อ 1. อนุภาคใดมีประจุไฟฟ้าเป็นลบ?</h3>
-            <label><input type="radio" name="q1" value="A"> A. โปรตอน</label>
-            <label><input type="radio" name="q1" value="B"> B. นิวตรอน</label>
-            <label><input type="radio" name="q1" value="C"> C. อิเล็กตรอน</label>
-            <label><input type="radio" name="q1" value="D"> D. นิวเคลียส</label>
+    <!-- โมเลกุล -->
+    <div class="molecule">
+
+        <div class="atom a1"></div>
+        <div class="atom a2"></div>
+        <div class="atom a3"></div>
+        <div class="atom a4"></div>
+
+        <div class="bond b1"></div>
+        <div class="bond b2"></div>
+        <div class="bond b3"></div>
+
+    </div>
+
+    <!-- เนื้อหาหลัก -->
+    <div class="content">
+
+        <div class="subtitle">
+            CHEMISTRY LEARNING SYSTEM
         </div>
 
-        <!-- ข้อ 2 -->
-        <div class="question">
-            <h3>ข้อ 2. เลขอะตอมของธาตุหมายถึงจำนวนใด?</h3>
-            <label><input type="radio" name="q2" value="A"> A. นิวตรอน</label>
-            <label><input type="radio" name="q2" value="B"> B. โปรตอน</label>
-            <label><input type="radio" name="q2" value="C"> C. โปรตอน + นิวตรอน</label>
-            <label><input type="radio" name="q2" value="D"> D. อิเล็กตรอน + นิวตรอน</label>
+        <h1>CHEM GAME</h1>
+
+        <div class="thai-title">
+            เกมผจญภัยในโลกแห่งเคมี
         </div>
 
-        <!-- ข้อ 3 -->
-        <div class="question">
-            <h3>ข้อ 3. ธาตุ Na มีเลขอะตอม 11 ในอะตอมที่เป็นกลางจะมีอิเล็กตรอนกี่ตัว?</h3>
-            <label><input type="radio" name="q3" value="A"> A. 10</label>
-            <label><input type="radio" name="q3" value="B"> B. 11</label>
-            <label><input type="radio" name="q3" value="C"> C. 12</label>
-            <label><input type="radio" name="q3" value="D"> D. 22</label>
-        </div>
+        <button class="login-btn" onclick="login()">
+            LOGIN
+        </button>
 
-        <!-- ข้อ 4 -->
-        <div class="question">
-            <h3>ข้อ 4. ข้อใดเป็นโลหะ?</h3>
-            <label><input type="radio" name="q4" value="A"> A. Na</label>
-            <label><input type="radio" name="q4" value="B"> B. Cl</label>
-            <label><input type="radio" name="q4" value="C"> C. O</label>
-            <label><input type="radio" name="q4" value="D"> D. Ne</label>
-        </div>
+    </div>
 
-        <!-- ข้อ 5 -->
-        <div class="question">
-            <h3>ข้อ 5. พันธะไอออนิกเกิดจากการยึดเหนี่ยวระหว่างอนุภาคใด?</h3>
-            <label><input type="radio" name="q5" value="A"> A. อะตอมโลหะกับอะตอมโลหะ</label>
-            <label><input type="radio" name="q5" value="B"> B. อะตอมอโลหะกับอะตอมอโลหะ</label>
-            <label><input type="radio" name="q5" value="C"> C. ไอออนบวกกับไอออนลบ</label>
-            <label><input type="radio" name="q5" value="D"> D. นิวตรอนกับโปรตอน</label>
-        </div>
+    <div class="version">
+        CHEM-GAME // VERSION 1.0
+    </div>
 
-        <!-- ข้อ 6 -->
-        <div class="question">
-            <h3>ข้อ 6. สูตรเคมีของโซเดียมคลอไรด์คือข้อใด?</h3>
-            <label><input type="radio" name="q6" value="A"> A. NaCl</label>
-            <label><input type="radio" name="q6" value="B"> B. NaCl₂</label>
-            <label><input type="radio" name="q6" value="C"> C. Na₂Cl</label>
-            <label><input type="radio" name="q6" value="D"> D. Na₂Cl₂</label>
-        </div>
-
-        <!-- ข้อ 7 -->
-        <div class="question">
-            <h3>ข้อ 7. ธาตุใดมีแนวโน้มรับอิเล็กตรอนได้ง่าย?</h3>
-            <label><input type="radio" name="q7" value="A"> A. Na</label>
-            <label><input type="radio" name="q7" value="B"> B. Mg</label>
-            <label><input type="radio" name="q7" value="C"> C. Cl</label>
-            <label><input type="radio" name="q7" value="D"> D. K</label>
-        </div>
-
-        <!-- ข้อ 8 -->
-        <div class="question">
-            <h3>ข้อ 8. อะตอมของออกซิเจนมีเลขอะตอม 8 มีอิเล็กตรอนเวเลนซ์กี่ตัว?</h3>
-            <label><input type="radio" name="q8" value="A"> A. 2</label>
-            <label><input type="radio" name="q8" value="B"> B. 4</label>
-            <label><input type="radio" name="q8" value="C"> C. 6</label>
-            <label><input type="radio" name="q8" value="D"> D. 8</label>
-        </div>
-
-        <!-- ข้อ 9 -->
-        <div class="question">
-            <h3>ข้อ 9. ข้อใดเป็นสารประกอบ?</h3>
-            <label><input type="radio" name="q9" value="A"> A. O₂</label>
-            <label><input type="radio" name="q9" value="B"> B. Fe</label>
-            <label><input type="radio" name="q9" value="C"> C. H₂O</label>
-            <label><input type="radio" name="q9" value="D"> D. N₂</label>
-        </div>
-
-        <!-- ข้อ 10 -->
-        <div class="question">
-            <h3>ข้อ 10. ข้อใดเป็นธาตุหมู่ 18?</h3>
-            <label><input type="radio" name="q10" value="A"> A. Na</label>
-            <label><input type="radio" name="q10" value="B"> B. Cl</label>
-            <label><input type="radio" name="q10" value="C"> C. Ne</label>
-            <label><input type="radio" name="q10" value="D"> D. Mg</label>
-        </div>
-
-        <!-- ข้อ 11 -->
-        <div class="question">
-            <h3>ข้อ 11. มวลโมเลกุลของ H₂O เท่ากับเท่าใด เมื่อ H = 1 และ O = 16?</h3>
-            <label><input type="radio" name="q11" value="A"> A. 17</label>
-            <label><input type="radio" name="q11" value="B"> B. 18</label>
-            <label><input type="radio" name="q11" value="C"> C. 19</label>
-            <label><input type="radio" name="q11" value="D"> D. 20</label>
-        </div>
-
-        <!-- ข้อ 12 -->
-        <div class="question">
-            <h3>ข้อ 12. ถ้า Na มีมวลอะตอม 23 และ Cl มีมวลอะตอม 35.5 NaCl มีมวลเท่าใด?</h3>
-            <label><input type="radio" name="q12" value="A"> A. 46.5</label>
-            <label><input type="radio" name="q12" value="B"> B. 58.5</label>
-            <label><input type="radio" name="q12" value="C"> C. 60.5</label>
-            <label><input type="radio" name="q12" value="D"> D. 62.5</label>
-        </div>
-
-        <!-- ข้อ 13 -->
-        <div class="question">
-            <h3>ข้อ 13. สารละลายคือข้อใด?</h3>
-            <label><input type="radio" name="q13" value="A"> A. สารบริสุทธิ์เท่านั้น</label>
-            <label><input type="radio" name="q13" value="B"> B. สารผสมเนื้อเดียว</label>
-            <label><input type="radio" name="q13" value="C"> C. สารผสมเนื้อผสม</label>
-            <label><input type="radio" name="q13" value="D"> D. ธาตุทุกชนิด</label>
-        </div>
-
-        <!-- ข้อ 14 -->
-        <div class="question">
-            <h3>ข้อ 14. ถ้าละลายเกลือ 10 g ในน้ำ 90 g สารละลายมีมวลทั้งหมดกี่กรัม?</h3>
-            <label><input type="radio" name="q14" value="A"> A. 80 g</label>
-            <label><input type="radio" name="q14" value="B"> B. 90 g</label>
-            <label><input type="radio" name="q14" value="C"> C. 100 g</label>
-            <label><input type="radio" name="q14" value="D"> D. 110 g</label>
-        </div>
-
-        <!-- ข้อ 15 -->
-        <div class="question">
-            <h3>ข้อ 15. ค่า pH น้อยกว่า 7 แสดงว่าสารมีสมบัติใด?</h3>
-            <label><input type="radio" name="q15" value="A"> A. เป็นกรด</label>
-            <label><input type="radio" name="q15" value="B"> B. เป็นเบส</label>
-            <label><input type="radio" name="q15" value="C"> C. เป็นกลาง</label>
-            <label><input type="radio" name="q15" value="D"> D. เป็นโลหะ</label>
-        </div>
-
-        <!-- ข้อ 16 -->
-        <div class="question">
-            <h3>ข้อ 16. ข้อใดเป็นกรด?</h3>
-            <label><input type="radio" name="q16" value="A"> A. NaOH</label>
-            <label><input type="radio" name="q16" value="B"> B. HCl</label>
-            <label><input type="radio" name="q16" value="C"> C. KOH</label>
-            <label><input type="radio" name="q16" value="D"> D. NH₃</label>
-        </div>
-
-        <!-- ข้อ 17 -->
-        <div class="question">
-            <h3>ข้อ 17. ปฏิกิริยาระหว่างกรดกับเบสโดยทั่วไปเรียกว่าอะไร?</h3>
-            <label><input type="radio" name="q17" value="A"> A. การเผาไหม้</label>
-            <label><input type="radio" name="q17" value="B"> B. การตกตะกอน</label>
-            <label><input type="radio" name="q17" value="C"> C. การสะเทิน</label>
-            <label><input type="radio" name="q17" value="D"> D. การระเหย</label>
-        </div>
-
-        <!-- ข้อ 18 -->
-        <div class="question">
-            <h3>ข้อ 18. สมการใดดุลแล้ว?</h3>
-            <label><input type="radio" name="q18" value="A"> A. H₂ + O₂ → H₂O</label>
-            <label><input type="radio" name="q18" value="B"> B. 2H₂ + O₂ → 2H₂O</label>
-            <label><input type="radio" name="q18" value="C"> C. H₂ + 2O₂ → H₂O</label>
-            <label><input type="radio" name="q18" value="D"> D. 2H₂ + 2O₂ → H₂O</label>
-        </div>
-
-        <!-- ข้อ 19 -->
-        <div class="question">
-            <h3>ข้อ 19. ในสมการ 2H₂ + O₂ → 2H₂O อัตราส่วน H₂ : O₂ คือเท่าใด?</h3>
-            <label><input type="radio" name="q19" value="A"> A. 1 : 1</label>
-            <label><input type="radio" name="q19" value="B"> B. 1 : 2</label>
-            <label><input type="radio" name="q19" value="C"> C. 2 : 1</label>
-            <label><input type="radio" name="q19" value="D"> D. 2 : 2</label>
-        </div>
-
-        <!-- ข้อ 20 -->
-        <div class="question">
-            <h3>ข้อ 20. ถ้ามี H₂ จำนวน 4 mol และทำปฏิกิริยากับ O₂ ตามสมการ 2H₂ + O₂ → 2H₂O จะเกิด H₂O กี่ mol?</h3>
-            <label><input type="radio" name="q20" value="A"> A. 2 mol</label>
-            <label><input type="radio" name="q20" value="B"> B. 4 mol</label>
-            <label><input type="radio" name="q20" value="C"> C. 6 mol</label>
-            <label><input type="radio" name="q20" value="D"> D. 8 mol</label>
-        </div>
-
-        <button type="button" onclick="checkAnswers()">ส่งคำตอบและดูคะแนน 🧪</button>
-
-    </form>
-
-    <div id="result"></div>
+    <div class="sdg">
+        SDG 4 // QUALITY EDUCATION
+    </div>
 
 </div>
 
-<footer>
-    Chem Game | Chemistry M.4 | SDG 4 Quality Education
-</footer>
 
 <script>
 
-const answers = {
-    q1: "C",
-    q2: "B",
-    q3: "B",
-    q4: "A",
-    q5: "C",
-    q6: "A",
-    q7: "C",
-    q8: "C",
-    q9: "C",
-    q10: "C",
-    q11: "B",
-    q12: "B",
-    q13: "B",
-    q14: "C",
-    q15: "A",
-    q16: "B",
-    q17: "C",
-    q18: "B",
-    q19: "C",
-    q20: "B"
-};
+function login() {
 
-const explanations = {
+    // แสดงข้อความเมื่อกด Login
+    alert("เข้าสู่ระบบ Chem Game");
 
-q1: `
-<b>เฉลย: C. อิเล็กตรอน</b><br>
-อิเล็กตรอนเป็นอนุภาคที่มีประจุไฟฟ้าเป็นลบ (-)
-โปรตอนมีประจุบวก (+) ส่วนนิวตรอนไม่มีประจุ
-`,
+    // หากมีหน้าล็อกอิน สามารถเปลี่ยนเป็น
+    // window.location.href = "login.html";
 
-q2: `
-<b>เฉลย: B. โปรตอน</b><br>
-เลขอะตอม (Z) = จำนวนโปรตอนในนิวเคลียส<br>
-ดังนั้น ถ้าธาตุมีเลขอะตอม 11 แสดงว่ามีโปรตอน 11 ตัว
-`,
-
-q3: `
-<b>เฉลย: B. 11</b><br>
-อะตอมที่เป็นกลางมีจำนวนโปรตอน = จำนวนอิเล็กตรอน<br>
-Na มีเลขอะตอม 11 → มีโปรตอน 11 ตัว<br>
-ดังนั้นมีอิเล็กตรอน = 11 ตัว
-`,
-
-q4: `
-<b>เฉลย: A. Na</b><br>
-Na หรือโซเดียมอยู่ทางด้านซ้ายของตารางธาตุและเป็นโลหะ<br>
-ส่วน Cl, O และ Ne เป็นอโลหะ
-`,
-
-q5: `
-<b>เฉลย: C. ไอออนบวกกับไอออนลบ</b><br>
-พันธะไอออนิกเกิดจากแรงดึงดูดทางไฟฟ้าสถิตระหว่างไอออนที่มีประจุตรงข้ามกัน<br>
-เช่น Na⁺ ดึงดูดกับ Cl⁻ เกิดเป็น NaCl
-`,
-
-q6: `
-<b>เฉลย: A. NaCl</b><br>
-Na มีประจุ +1 → Na⁺<br>
-Cl มีประจุ -1 → Cl⁻<br>
-ประจุ +1 และ -1 หักล้างกันในอัตราส่วน 1:1<br>
-ดังนั้นสูตรคือ NaCl
-`,
-
-q7: `
-<b>เฉลย: C. Cl</b><br>
-Cl เป็นอโลหะหมู่ 17 มีอิเล็กตรอนเวเลนซ์ 7 ตัว<br>
-จึงมีแนวโน้มรับอิเล็กตรอนเพิ่ม 1 ตัวเพื่อให้ครบ 8 ตัว
-`,
-
-q8: `
-<b>เฉลย: C. 6</b><br>
-ออกซิเจนมีเลขอะตอม 8 → มีอิเล็กตรอน 8 ตัว<br>
-การจัดเรียงอิเล็กตรอนคือ 2, 6<br>
-ดังนั้นอิเล็กตรอนเวเลนซ์ = 6 ตัว
-`,
-
-q9: `
-<b>เฉลย: C. H₂O</b><br>
-สารประกอบเกิดจากธาตุตั้งแต่ 2 ชนิดขึ้นไปรวมกันทางเคมี<br>
-H₂O ประกอบด้วย H และ O จึงเป็นสารประกอบ
-`,
-
-q10: `
-<b>เฉลย: C. Ne</b><br>
-Ne หรือ นีออน อยู่ในหมู่ 18 ซึ่งเป็นหมู่แก๊สมีตระกูล<br>
-ธาตุหมู่นี้มีความเสถียรและมีเวเลนซ์อิเล็กตรอนเต็ม
-`,
-
-q11: `
-<b>เฉลย: B. 18</b><br>
-H₂O มี H จำนวน 2 อะตอม และ O จำนวน 1 อะตอม<br>
-มวลโมเลกุล = (2 × 1) + (1 × 16)<br>
-= 2 + 16<br>
-= <b>18</b>
-`,
-
-q12: `
-<b>เฉลย: B. 58.5</b><br>
-NaCl ประกอบด้วย Na 1 อะตอม และ Cl 1 อะตอม<br>
-มวล = 23 + 35.5<br>
-= <b>58.5</b>
-`,
-
-q13: `
-<b>เฉลย: B. สารผสมเนื้อเดียว</b><br>
-สารละลายเป็นสารผสมที่มีองค์ประกอบกระจายตัวสม่ำเสมอ<br>
-เช่น น้ำเกลือ ซึ่งมองเห็นเป็นเนื้อเดียวกัน
-`,
-
-q14: `
-<b>เฉลย: C. 100 g</b><br>
-มวลของสารละลาย = มวลตัวละลาย + มวลตัวทำละลาย<br>
-= 10 + 90<br>
-= <b>100 g</b>
-`,
-
-q15: `
-<b>เฉลย: A. เป็นกรด</b><br>
-ค่า pH มีช่วงโดยทั่วไป 0–14<br>
-pH < 7 → เป็นกรด<br>
-pH = 7 → เป็นกลาง<br>
-pH > 7 → เป็นเบส
-`,
-
-q16: `
-<b>เฉลย: B. HCl</b><br>
-HCl หรือกรดไฮโดรคลอริกเป็นกรด<br>
-เมื่ออยู่ในน้ำสามารถแตกตัวให้ H⁺ จึงมีสมบัติเป็นกรด
-`,
-
-q17: `
-<b>เฉลย: C. การสะเทิน</b><br>
-กรด + เบส → เกลือ + น้ำ<br>
-ปฏิกิริยาลักษณะนี้เรียกว่า "ปฏิกิริยาการสะเทิน"
-`,
-
-q18: `
-<b>เฉลย: B. 2H₂ + O₂ → 2H₂O</b><br>
-ด้านซ้ายมี H = 4 อะตอม และ O = 2 อะตอม<br>
-ด้านขวามี H = 4 อะตอม และ O = 2 อะตอม<br>
-จำนวนอะตอมของแต่ละธาตุเท่ากันทั้งสองด้าน จึงเป็นสมการที่ดุลแล้ว
-`,
-
-q19: `
-<b>เฉลย: C. 2 : 1</b><br>
-ดูจากสัมประสิทธิ์หน้าสารในสมการ<br>
-2H₂ + O₂ → 2H₂O<br>
-H₂ มี 2 ส่วน และ O₂ มี 1 ส่วน<br>
-ดังนั้น H₂ : O₂ = <b>2 : 1</b>
-`,
-
-q20: `
-<b>เฉลย: B. 4 mol</b><br>
-จากสมการ<br>
-2H₂ + O₂ → 2H₂O<br>
-อัตราส่วน H₂ : H₂O = 2 : 2 = 1 : 1<br>
-ถ้ามี H₂ = 4 mol<br>
-จะเกิด H₂O = 4 mol
-`
-
-};
-
-function checkAnswers() {
-
-    let score = 0;
-    let resultHTML = "<div class='score'>🎉 คะแนนของคุณ: ";
-
-    for (let i = 1; i <= 20; i++) {
-
-        let selected = document.querySelector(
-            `input[name="q${i}"]:checked`
-        );
-
-        if (selected && selected.value === answers[`q${i}`]) {
-            score++;
-        }
-    }
-
-    resultHTML += score + " / 20 คะแนน</div>";
-
-    if (score >= 16) {
-        resultHTML +=
-        "<p class='correct' style='text-align:center'>🌟 ยอดเยี่ยม! เข้าใจพื้นฐานเคมีได้ดีมาก</p>";
-    }
-    else if (score >= 12) {
-        resultHTML +=
-        "<p class='correct' style='text-align:center'>👍 ผ่าน! แต่ยังสามารถทบทวนเพิ่มเติมได้</p>";
-    }
-    else {
-        resultHTML +=
-        "<p class='wrong' style='text-align:center'>📚 ลองทบทวนบทเรียนแล้วทำใหม่อีกครั้งนะ</p>";
-    }
-
-    resultHTML += "<h2>📖 เฉลยและวิธีทำ</h2>";
-
-    for (let i = 1; i <= 20; i++) {
-
-        resultHTML += `
-        <div class="answer">
-            <h3>ข้อ ${i}</h3>
-            ${explanations[`q${i}`]}
-        </div>
-        `;
-    }
-
-    document.getElementById("result").innerHTML = resultHTML;
-    document.getElementById("result").style.display = "block";
-
-    window.scrollTo({
-        top: document.getElementById("result").offsetTop,
-        behavior: "smooth"
-    });
 }
 
 </script>
