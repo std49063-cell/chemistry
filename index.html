@@ -43,6 +43,25 @@ linear-gradient(90deg,rgba(0,243,255,.04) 1px,transparent 1px);background-size:4
 #toast.show{opacity:1;transform:translate(-50%,0)}
 .modal{display:none}.modal.show{display:flex}
 .locked{filter:brightness(.32)}
+
+/* ===== ChemCraft Fusion V2 ===== */
+.v2-panel{background:rgba(15,23,42,.72);border:1px solid rgba(148,163,184,.18);border-radius:22px;padding:18px;box-shadow:0 12px 35px rgba(0,0,0,.18)}
+.v2-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.v2-stat{padding:16px;border-radius:18px;background:linear-gradient(135deg,rgba(30,41,59,.9),rgba(15,23,42,.72));border:1px solid rgba(255,255,255,.08)}
+.v2-bar{height:10px;background:#1e293b;border-radius:99px;overflow:hidden}.v2-fill{height:100%;width:0%;border-radius:99px;transition:width .45s ease}
+.v2-badge{display:inline-flex;align-items:center;gap:7px;padding:7px 10px;border-radius:999px;background:rgba(99,102,241,.14);border:1px solid rgba(129,140,248,.22);font-size:12px}
+.v2-mission{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:12px;border-radius:15px;background:rgba(2,6,23,.35);border:1px solid rgba(148,163,184,.1);margin-top:9px}
+.v2-btn{border:0;border-radius:13px;padding:10px 14px;font-weight:700;cursor:pointer;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff}
+.v2-btn:disabled{opacity:.45;cursor:not-allowed}
+.v2-toast{position:fixed;right:20px;bottom:20px;z-index:9999;padding:14px 18px;border-radius:15px;background:#0f172a;color:#fff;border:1px solid rgba(255,255,255,.12);box-shadow:0 15px 40px rgba(0,0,0,.3);animation:v2toast .25s ease}
+@keyframes v2toast{from{transform:translateY(15px);opacity:0}to{transform:translateY(0);opacity:1}}
+.gacha-machine{width:190px;height:190px;margin:0 auto;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 35% 30%,#f8fafc 0 8%,#c4b5fd 9% 22%,#7c3aed 23% 52%,#312e81 53% 100%);box-shadow:0 0 55px rgba(124,58,237,.55);animation:gspin 2.8s linear infinite paused}
+.gacha-machine.spin{animation-play-state:running}.gacha-core{font-size:48px;filter:drop-shadow(0 4px 8px rgba(0,0,0,.3))}
+@keyframes gspin{to{transform:rotate(360deg)}}
+.rarity-common{color:#cbd5e1}.rarity-rare{color:#60a5fa}.rarity-epic{color:#c084fc}.rarity-legendary{color:#fbbf24}
+.v2-table{width:100%;border-collapse:collapse}.v2-table th,.v2-table td{text-align:left;padding:10px;border-bottom:1px solid rgba(148,163,184,.1)}.rank-me{font-weight:800}
+@media(max-width:700px){.v2-mission{align-items:flex-start;flex-direction:column}.gacha-machine{width:150px;height:150px}}
+
 </style>
 </head>
 <body>
@@ -459,5 +478,332 @@ function openBadges(){document.getElementById('badgeList').innerHTML=BADGES.map(
 for(let i=0;i<30;i++){const p=document.createElement('div');p.className='particle';p.style.left=Math.random()*100+'%';p.style.animationDuration=8+Math.random()*14+'s';p.style.animationDelay=-Math.random()*15+'s';document.getElementById('particles').appendChild(p)}
 const saved=localStorage.getItem('chemUsername');if(saved){state.username=saved;loadPlayer();enterGame()}
 </script>
+
+<!-- ===== ChemCraft Fusion V2 Dashboard ===== -->
+<section id="v2dashboard" class="max-w-6xl mx-auto px-4 py-8">
+  <div class="v2-panel">
+    <div class="flex flex-wrap items-center justify-between gap-3 mb-5">
+      <div>
+        <h2 class="text-2xl font-extrabold">🚀 ChemCraft Fusion V2</h2>
+        <p class="text-slate-400 text-sm">Level • XP • Streak • Daily Mission • Gacha • Items • Ranking • Smart Quiz</p>
+      </div>
+      <span id="v2PlayerBadge" class="v2-badge">⭐ Level 1</span>
+    </div>
+
+    <div class="v2-grid">
+      <div class="v2-stat">
+        <div class="text-slate-400 text-xs">LEVEL</div>
+        <div id="v2Level" class="text-3xl font-black">1</div>
+        <div class="v2-bar mt-2"><div id="v2XpBar" class="v2-fill" style="background:#8b5cf6"></div></div>
+        <div id="v2XpText" class="text-xs text-slate-400 mt-2">0 / 100 XP</div>
+      </div>
+      <div class="v2-stat">
+        <div class="text-slate-400 text-xs">🔥 STREAK</div>
+        <div id="v2Streak" class="text-3xl font-black">0 วัน</div>
+        <div class="text-xs text-slate-400">ทำภารกิจ/ตอบโจทย์ต่อเนื่อง</div>
+      </div>
+      <div class="v2-stat">
+        <div class="text-slate-400 text-xs">⚡ XP รวม</div>
+        <div id="v2TotalXp" class="text-3xl font-black">0</div>
+        <div class="text-xs text-slate-400">ปลดล็อกเลเวลใหม่เมื่อ XP ครบ</div>
+      </div>
+      <div class="v2-stat">
+        <div class="text-slate-400 text-xs">🎒 ITEMS</div>
+        <div id="v2Items" class="text-3xl font-black">0</div>
+        <div class="text-xs text-slate-400">ไอเทมที่สะสมได้</div>
+      </div>
+    </div>
+
+    <div class="grid lg:grid-cols-2 gap-5 mt-5">
+      <div>
+        <h3 class="font-bold mb-2">📅 Daily Missions</h3>
+        <div id="v2Missions"></div>
+      </div>
+      <div>
+        <h3 class="font-bold mb-2">🏆 Ranking</h3>
+        <div id="v2Ranking"></div>
+      </div>
+    </div>
+
+    <div class="mt-5 grid lg:grid-cols-2 gap-5">
+      <div>
+        <h3 class="font-bold mb-2">🎒 Item Inventory</h3>
+        <div id="v2ItemList" class="v2-grid"></div>
+      </div>
+      <div>
+        <h3 class="font-bold mb-2">🧠 Smart Quiz</h3>
+        <div class="v2-stat">
+          <div id="v2QuizQuestion" class="font-bold mb-3">กดเริ่มเพื่อรับโจทย์แบบสุ่มที่ยังไม่เคยตอบ</div>
+          <div id="v2QuizChoices" class="grid gap-2"></div>
+          <div class="flex gap-2 mt-3">
+            <button class="v2-btn" id="v2QuizStart">เริ่มโจทย์</button>
+            <button class="v2-btn" id="v2QuizReset" style="background:linear-gradient(135deg,#475569,#334155)">ล้างประวัติโจทย์</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-5">
+      <h3 class="font-bold mb-2">🎰 Gacha Animation V2</h3>
+      <div class="v2-stat text-center">
+        <div id="v2GachaMachine" class="gacha-machine"><div class="gacha-core">⚛️</div></div>
+        <div id="v2GachaResult" class="mt-3 font-bold">พร้อมสุ่ม — 100 Coins</div>
+        <button class="v2-btn mt-3" id="v2GachaBtn">สุ่มกาชา 100 🪙</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<script>
+/* ==================== ChemCraft Fusion V2 Engine ==================== */
+(() => {
+  const V2_KEY = "chemFusionV2_";
+  const todayKey = () => new Date().toISOString().slice(0,10);
+
+  const V2_ITEMS = [
+    {id:"xp_boost",name:"🧪 XP Booster",desc:"+25 XP เมื่อทำโจทย์ถูก",effect:"xp",value:25},
+    {id:"coin_boost",name:"🪙 Coin Booster",desc:"+50 Coins จากภารกิจ",effect:"coin",value:50},
+    {id:"streak_shield",name:"🛡️ Streak Shield",desc:"ป้องกัน Streak หลุด 1 ครั้ง",effect:"shield",value:1},
+    {id:"lucky_atom",name:"🍀 Lucky Atom",desc:"เพิ่มโอกาสได้ Rare+ ในกาชา",effect:"luck",value:1}
+  ];
+
+  const V2_QUIZ = [
+    ["เลขอะตอมของ O คือเท่าใด?",["6","8","10","16"],1],
+    ["สูตรของน้ำคือข้อใด?",["CO₂","H₂O","NaCl","O₂"],1],
+    ["Na⁺ เกิดจาก Na มีการ...",["รับ 1e⁻","เสีย 1e⁻","รับ 2e⁻","เสีย 2e⁻"],1],
+    ["พันธะใน NaCl จัดเป็น...",["โลหะ","โคเวเลนต์","ไอออนิก","ไฮโดรเจน"],2],
+    ["สัมประสิทธิ์ของ H₂ เมื่อดุล H₂ + O₂ → H₂O คือ...",["1","2","3","4"],1],
+    ["จำนวนโปรตอนของ Cl คือ...",["15","16","17","18"],2],
+    ["อิเล็กตรอนชั้นนอกสุดของ C มี...",["2","4","6","8"],1],
+    ["สมการ CH₄ + O₂ → CO₂ + H₂O ต้องใช้ O₂ เท่าใดเมื่อ CH₄ = 1?",["1","2","3","4"],1],
+    ["ไอออนใดเป็นแคตไอออน?",["Cl⁻","O²⁻","Na⁺","F⁻"],2],
+    ["Ca มีเลขอะตอม 20 และโดยทั่วไปมีเวเลนซ์อิเล็กตรอน...",["1","2","6","8"],1],
+    ["สูตรสารประกอบจาก Mg²⁺ และ Cl⁻ คือ...",["MgCl","MgCl₂","Mg₂Cl","Mg₂Cl₂"],1],
+    ["N₂ + H₂ → NH₃ เมื่อดุลแล้ว H₂ มีสัมประสิทธิ์...",["1","2","3","4"],2],
+    ["ธาตุในหมู่ 18 เรียกว่า...",["โลหะแอลคาไล","ฮาโลเจน","แก๊สมีตระกูล","โลหะแอลคาไลน์เอิร์ธ"],2],
+    ["เลขมวล = ?",["โปรตอน - นิวตรอน","โปรตอน + นิวตรอน","อิเล็กตรอน + โปรตอน","นิวตรอน - อิเล็กตรอน"],1],
+    ["ถ้าอะตอมมี p=11 และ e=10 จะมีประจุ...",["-1","+1","0","+2"],1]
+  ];
+
+  let v2 = {
+    xp:0, level:1, streak:0, lastActive:"",
+    missionsDate:"",
+    missions:{quiz:0,gacha:0,score:0},
+    missionClaimed:{quiz:false,gacha:false,score:false},
+    itemCounts:{},
+    seenQuiz:[],
+    totalCorrect:0,
+    gachaCount:0
+  };
+
+  function username(){
+    return localStorage.getItem("chemUsername") || "guest";
+  }
+  function load(){
+    try{
+      const saved=JSON.parse(localStorage.getItem(V2_KEY+username())||"null");
+      if(saved) v2=Object.assign(v2,saved);
+    }catch(e){}
+    if(v2.missionsDate!==todayKey()){
+      v2.missionsDate=todayKey();
+      v2.missions={quiz:0,gacha:0,score:0};
+      v2.missionClaimed={quiz:false,gacha:false,score:false};
+      save();
+    }
+    render();
+  }
+  function save(){localStorage.setItem(V2_KEY+username(),JSON.stringify(v2));}
+
+  function xpNeed(level){ return Math.round(100*Math.pow(1.18,level-1)); }
+  function addXP(amount){
+    let leveled=false;
+    v2.xp += amount;
+    while(v2.xp >= xpNeed(v2.level)){
+      v2.xp -= xpNeed(v2.level);
+      v2.level++;
+      leveled=true;
+      toast("🎉 Level Up! ตอนนี้ Level "+v2.level);
+      if(v2.level%5===0) addItem("xp_boost",1);
+    }
+    save(); render();
+    return leveled;
+  }
+  function addItem(id,n=1){v2.itemCounts[id]=(v2.itemCounts[id]||0)+n;}
+  function totalItems(){return Object.values(v2.itemCounts).reduce((a,b)=>a+b,0)}
+  function toast(msg){
+    const old=document.querySelector(".v2-toast"); if(old) old.remove();
+    const el=document.createElement("div"); el.className="v2-toast"; el.textContent=msg;
+    document.body.appendChild(el); setTimeout(()=>el.remove(),2600);
+  }
+
+  function syncStreak(){
+    const d=todayKey();
+    if(v2.lastActive===d) return;
+    const prev=new Date(); prev.setDate(prev.getDate()-1);
+    const p=prev.toISOString().slice(0,10);
+    v2.streak = v2.lastActive===p ? v2.streak+1 : 1;
+    v2.lastActive=d; save();
+  }
+
+  function missionClaim(type, reward){
+    if(v2.missionClaimed[type]) return;
+    v2.missionClaimed[type]=true;
+    addXP(reward.xp);
+    if(window.state){ window.state.coins=(window.state.coins||0)+reward.coins; if(typeof window.saveState==="function") window.saveState(); if(typeof window.updateUI==="function") window.updateUI(); }
+    if(reward.item) addItem(reward.item,1);
+    save(); render(); toast("🎁 รับรางวัลภารกิจแล้ว!");
+  }
+
+  function updateMission(type, amount=1){
+    v2.missions[type]=(v2.missions[type]||0)+amount;
+    syncStreak();
+    const goals={quiz:3,gacha:1,score:500};
+    const rewards={
+      quiz:{xp:80,coins:100,item:"xp_boost"},
+      gacha:{xp:50,coins:50,item:"lucky_atom"},
+      score:{xp:120,coins:150,item:"coin_boost"}
+    };
+    if(v2.missions[type]>=goals[type]) missionClaim(type,rewards[type]);
+    save(); render();
+  }
+
+  function render(){
+    const need=xpNeed(v2.level), pct=Math.min(100,v2.xp/need*100);
+    const set=(id,val)=>{const e=document.getElementById(id);if(e)e.textContent=val};
+    set("v2Level",v2.level);set("v2PlayerBadge","⭐ Level "+v2.level);
+    set("v2Streak",v2.streak+" วัน");set("v2TotalXp",totalXP());
+    set("v2Items",totalItems());set("v2XpText",v2.xp+" / "+need+" XP");
+    const bar=document.getElementById("v2XpBar");if(bar)bar.style.width=pct+"%";
+
+    const m=document.getElementById("v2Missions");
+    if(m)m.innerHTML=[
+      missionRow("🧠","ตอบโจทย์ถูก",v2.missions.quiz,3,v2.missionClaimed.quiz),
+      missionRow("🎰","สุ่มกาชา",v2.missions.gacha,1,v2.missionClaimed.gacha),
+      missionRow("🏆","ทำคะแนน",v2.missions.score,500,v2.missionClaimed.score)
+    ].join("");
+
+    const items=document.getElementById("v2ItemList");
+    if(items)items.innerHTML=V2_ITEMS.map(i=>`<div class="v2-stat"><div class="font-bold">${i.name}</div><div class="text-xs text-slate-400">${i.desc}</div><div class="text-xl font-black mt-1">x${v2.itemCounts[i.id]||0}</div></div>`).join("");
+
+    renderRanking();
+  }
+
+  function missionRow(icon,name,cur,max,claimed){
+    return `<div class="v2-mission"><div><div class="font-bold">${icon} ${name}</div><div class="text-xs text-slate-400">${Math.min(cur,max)} / ${max}</div></div><span class="v2-badge">${claimed?"✅ สำเร็จ":"🎁 XP + Coins"}</span></div>`;
+  }
+
+  function totalXP(){
+    let total=0;
+    for(let i=1;i<v2.level;i++) total+=xpNeed(i);
+    return total+v2.xp;
+  }
+
+  function renderRanking(){
+    const key="chemFusionRanking";
+    let ranks=[];try{ranks=JSON.parse(localStorage.getItem(key)||"[]")}catch(e){}
+    const me=username();
+    const old=ranks.find(x=>x.name===me);
+    if(old)old.score=totalXP();
+    else ranks.push({name:me,score:totalXP()});
+    ranks.sort((a,b)=>b.score-a.score); ranks=ranks.slice(0,10);
+    localStorage.setItem(key,JSON.stringify(ranks));
+    const box=document.getElementById("v2Ranking"); if(!box)return;
+    box.innerHTML=`<table class="v2-table"><thead><tr><th>#</th><th>ผู้เล่น</th><th>XP</th></tr></thead><tbody>`+
+      ranks.map((r,i)=>`<tr class="${r.name===me?"rank-me":""}"><td>${i+1}</td><td>${r.name}${r.name===me?" 👈":""}</td><td>${r.score}</td></tr>`).join("")+
+      `</tbody></table>`;
+  }
+
+  function randomQuiz(){
+    if(v2.seenQuiz.length>=V2_QUIZ.length){v2.seenQuiz=[];save();toast("🔄 ใช้ครบทุกข้อแล้ว เริ่มชุดใหม่!");}
+    const available=V2_QUIZ.map((_,i)=>i).filter(i=>!v2.seenQuiz.includes(i));
+    const idx=available[Math.floor(Math.random()*available.length)];
+    v2.seenQuiz.push(idx);save();return V2_QUIZ[idx];
+  }
+
+  function startQuiz(){
+    const q=randomQuiz(), qbox=document.getElementById("v2QuizQuestion"), choices=document.getElementById("v2QuizChoices");
+    qbox.dataset.correct=q[2]; qbox.textContent=q[0];
+    choices.innerHTML=q[1].map((x,i)=>`<button class="v2-btn" data-i="${i}" style="text-align:left;background:rgba(30,41,59,.9)">${String.fromCharCode(65+i)}. ${x}</button>`).join("");
+    choices.querySelectorAll("button").forEach(b=>b.onclick=()=>answerQuiz(+b.dataset.i,q[2],choices));
+  }
+  function answerQuiz(ans,correct,box){
+    [...box.children].forEach(b=>b.disabled=true);
+    if(ans===correct){
+      v2.totalCorrect++; addXP(30); updateMission("quiz",1); updateMission("score",50);
+      if(window.state){window.state.score=(window.state.score||0)+50;window.state.coins=(window.state.coins||0)+20;if(typeof window.saveState==="function")window.saveState();if(typeof window.updateUI==="function")window.updateUI();}
+      toast("✅ ถูกต้อง! +30 XP +50 Score");
+    }else toast("❌ ยังไม่ถูก ลองโจทย์ถัดไปได้เลย");
+    save();render();
+  }
+
+  function gacha(){
+    let coins=window.state?.coins||0;
+    if(coins<100){toast("🪙 Coins ไม่พอ ต้องมี 100 Coins");return;}
+    window.state.coins-=100;
+    if(typeof window.saveState==="function")window.saveState();
+    if(typeof window.updateUI==="function")window.updateUI();
+    const machine=document.getElementById("v2GachaMachine"), result=document.getElementById("v2GachaResult");
+    machine.classList.add("spin"); result.textContent="✨ กำลังสุ่ม... ✨";
+    setTimeout(()=>{
+      const luck=(v2.itemCounts.lucky_atom||0)>0 ? .12 : 0;
+      const r=Math.random(), rarity=r<(0.05+luck)?"Legendary":r<(0.15+luck)?"Epic":r<0.4?"Rare":"Common";
+      const pool=window.CHEM_ELEMENTS||[{symbol:"H",name:"Hydrogen"}];
+      const chosen=pool[Math.floor(Math.random()*pool.length)];
+      addItem("xp_boost",rarity==="Legendary"?2:1);
+      v2.gachaCount++;updateMission("gacha",1);addXP(rarity==="Legendary"?100:rarity==="Epic"?60:30);
+      if(window.state){
+        window.state.inventory=window.state.inventory||[];
+        if(!window.state.inventory.includes(chosen.symbol))window.state.inventory.push(chosen.symbol);
+        if(typeof window.saveState==="function")window.saveState();if(typeof window.updateUI==="function")window.updateUI();
+      }
+      machine.classList.remove("spin");
+      result.innerHTML=`🎉 ได้ <span class="rarity-${rarity.toLowerCase()}">${rarity}</span> — ${chosen.symbol} ${chosen.name}`;
+      save();render();
+    },2800);
+  }
+
+  document.addEventListener("DOMContentLoaded",()=>{
+    document.getElementById("v2QuizStart")?.addEventListener("click",startQuiz);
+    document.getElementById("v2QuizReset")?.addEventListener("click",()=>{v2.seenQuiz=[];save();toast("🧹 ล้างประวัติโจทย์แล้ว");});
+    document.getElementById("v2GachaBtn")?.addEventListener("click",gacha);
+    load();
+  });
+
+  // Hook into common existing global state/functions without breaking V1.
+  const hook=()=>{
+    try{
+      if(window.state){
+        const oldScore=window.addScore;
+        if(oldScore && !oldScore.__v2wrapped){
+          const wrapped=function(pts){
+            const before=window.state.score||0; const ret=oldScore.apply(this,arguments);
+            const gained=Math.max(0,(window.state.score||0)-before);
+            if(gained){updateMission("score",gained);addXP(Math.max(1,Math.round(gained/10)));}
+            return ret;
+          };
+          wrapped.__v2wrapped=true; window.addScore=wrapped;
+        }
+      }
+    }catch(e){}
+  };
+  setInterval(hook,1200);
+
+  window.ChemCraftV2={addXP,updateMission,render,load};
+})();
+</script>
+
+
+<script>
+/* V2 compatibility bridge */
+try{
+  if(typeof state!=="undefined") window.state=state;
+  if(typeof CHEM_ELEMENTS!=="undefined") window.CHEM_ELEMENTS=CHEM_ELEMENTS;
+  if(typeof saveState==="function") window.saveState=saveState;
+  if(typeof updateUI==="function") window.updateUI=updateUI;
+  if(typeof addScore==="function") window.addScore=addScore;
+}catch(e){}
+</script>
+
 </body>
 </html>
