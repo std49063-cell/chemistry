@@ -1,432 +1,1439 @@
+```html
 <!DOCTYPE html>
 <html lang="th">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Chem Game - Sci-Fi</title>
+<title>CHEM GAME | Sci-Fi Chemistry</title>
 
 <style>
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
+*{box-sizing:border-box;margin:0;padding:0}
 
-    body {
-        font-family: Arial, Helvetica, sans-serif;
-        background: #020b08;
-        color: white;
-        overflow: hidden;
-    }
+:root{
+  --green:#00ffae;
+  --green2:#16c784;
+  --dark:#020b08;
+  --panel:rgba(5,25,20,.88);
+  --white:#effff9;
+  --muted:#8db7a8;
+}
 
-    /* พื้นหลังเต็มหน้าจอ */
-    .screen {
-        width: 100vw;
-        height: 100vh;
-        position: relative;
-        overflow: hidden;
-        background:
-            radial-gradient(circle at center, #063c2d 0%, #021812 35%, #010806 75%);
-    }
+body{
+  font-family:Tahoma,Arial,sans-serif;
+  background:var(--dark);
+  color:var(--white);
+  min-height:100vh;
+  overflow-x:hidden;
+}
 
-    /* แสงวงกลมด้านหลัง */
-    .glow {
-        position: absolute;
-        width: 650px;
-        height: 650px;
-        border-radius: 50%;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%);
-        background: rgba(0, 255, 170, 0.08);
-        box-shadow:
-            0 0 80px rgba(0, 255, 170, 0.2),
-            0 0 180px rgba(0, 255, 170, 0.1);
-    }
+button{
+  font-family:inherit;
+  cursor:pointer;
+}
 
-    /* เส้นตาราง Sci-Fi */
-    .grid {
-        position: absolute;
-        inset: 0;
-        background-image:
-            linear-gradient(rgba(0,255,170,0.06) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(0,255,170,0.06) 1px, transparent 1px);
-        background-size: 50px 50px;
-        transform: perspective(500px) rotateX(60deg) scale(1.5);
-        transform-origin: center bottom;
-        opacity: 0.5;
-    }
+/* ================= BACKGROUND ================= */
 
-    /* เส้นตกแต่ง */
-    .line {
-        position: absolute;
-        background: #00ffae;
-        opacity: 0.5;
-        box-shadow: 0 0 10px #00ffae;
-    }
+.app{
+  min-height:100vh;
+  position:relative;
+  background:
+    radial-gradient(circle at 50% 35%,#074f3b 0%,#031c15 28%,#020b08 68%);
+}
 
-    .line1 {
-        width: 220px;
-        height: 1px;
-        top: 20%;
-        left: 5%;
-    }
+.app::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  background-image:
+    linear-gradient(rgba(0,255,174,.045) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,255,174,.045) 1px,transparent 1px);
+  background-size:45px 45px;
+}
 
-    .line2 {
-        width: 150px;
-        height: 1px;
-        bottom: 20%;
-        right: 5%;
-    }
+.orb{
+  position:fixed;
+  width:500px;
+  height:500px;
+  border-radius:50%;
+  left:50%;
+  top:40%;
+  transform:translate(-50%,-50%);
+  background:rgba(0,255,174,.04);
+  box-shadow:0 0 100px rgba(0,255,174,.12);
+  pointer-events:none;
+}
 
-    /* เนื้อหาหลัก */
-    .content {
-        position: absolute;
-        z-index: 10;
-        width: 100%;
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-    }
+/* ================= LOGIN ================= */
 
-    .subtitle {
-        color: #00ffae;
-        font-size: 15px;
-        letter-spacing: 6px;
-        margin-bottom: 15px;
-        text-shadow: 0 0 15px #00ffae;
-    }
+#loginPage{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+}
 
-    h1 {
-        font-size: clamp(60px, 9vw, 130px);
-        letter-spacing: 8px;
-        margin-bottom: 5px;
+.login-box{
+  width:min(430px,90%);
+  text-align:center;
+  padding:45px 35px;
+  background:rgba(2,18,13,.88);
+  border:1px solid rgba(0,255,174,.5);
+  border-radius:20px;
+  box-shadow:
+    0 0 30px rgba(0,255,174,.15),
+    inset 0 0 30px rgba(0,255,174,.03);
+  backdrop-filter:blur(12px);
+}
 
-        color: white;
+.logo{
+  font-size:52px;
+  font-weight:900;
+  letter-spacing:5px;
+  color:white;
+  text-shadow:
+    0 0 10px var(--green),
+    0 0 35px var(--green);
+}
 
-        text-shadow:
-            0 0 5px #fff,
-            0 0 15px #00ffae,
-            0 0 35px #00ffae,
-            0 0 70px #00ffae;
-    }
+.login-sub{
+  color:var(--green);
+  letter-spacing:4px;
+  font-size:12px;
+  margin:12px 0 35px;
+}
 
-    .thai-title {
-        font-size: 20px;
-        letter-spacing: 5px;
-        color: #b9ffe9;
-        margin-bottom: 45px;
-    }
+.input{
+  width:100%;
+  padding:15px;
+  margin-bottom:15px;
+  background:#061711;
+  border:1px solid #185a46;
+  border-radius:8px;
+  color:white;
+  outline:none;
+}
 
-    /* ปุ่ม Login */
-    .login-btn {
-        width: 250px;
-        padding: 18px 30px;
+.input:focus{
+  border-color:var(--green);
+  box-shadow:0 0 10px rgba(0,255,174,.2);
+}
 
-        background: rgba(0, 255, 174, 0.08);
+.main-btn{
+  width:100%;
+  padding:15px;
+  border:1px solid var(--green);
+  border-radius:8px;
+  background:rgba(0,255,174,.08);
+  color:var(--green);
+  font-weight:bold;
+  letter-spacing:2px;
+  transition:.25s;
+}
 
-        border: 2px solid #00ffae;
-        border-radius: 8px;
+.main-btn:hover{
+  background:var(--green);
+  color:#00150e;
+  box-shadow:0 0 25px var(--green);
+  transform:translateY(-2px);
+}
 
-        color: #00ffae;
-        font-size: 20px;
-        font-weight: bold;
-        letter-spacing: 4px;
+/* ================= HEADER ================= */
 
-        cursor: pointer;
+#gamePage{
+  display:none;
+  min-height:100vh;
+  position:relative;
+  z-index:2;
+}
 
-        box-shadow:
-            0 0 10px rgba(0,255,174,0.5),
-            inset 0 0 10px rgba(0,255,174,0.1);
+header{
+  height:72px;
+  padding:0 30px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  border-bottom:1px solid rgba(0,255,174,.2);
+  background:rgba(2,12,9,.9);
+  backdrop-filter:blur(10px);
+  position:sticky;
+  top:0;
+  z-index:50;
+}
 
-        transition: 0.3s;
-    }
+.brand{
+  font-weight:900;
+  letter-spacing:3px;
+  color:var(--green);
+}
 
-    .login-btn:hover {
-        background: #00ffae;
-        color: #00130d;
+.header-right{
+  display:flex;
+  align-items:center;
+  gap:18px;
+}
 
-        box-shadow:
-            0 0 20px #00ffae,
-            0 0 50px #00ffae;
+.coins{
+  padding:9px 16px;
+  border:1px solid #966d13;
+  border-radius:20px;
+  color:#ffd95a;
+  background:rgba(255,210,60,.07);
+  font-weight:bold;
+}
 
-        transform: scale(1.05);
-    }
+.logout{
+  background:none;
+  border:1px solid #34564b;
+  color:#9bb7ad;
+  padding:8px 13px;
+  border-radius:6px;
+}
 
-    /* สัญลักษณ์เคมี */
-    .chemical {
-        position: absolute;
-        color: #00ffae;
-        font-weight: bold;
-        opacity: 0.65;
-        text-shadow: 0 0 15px #00ffae;
-        animation: float 5s infinite ease-in-out;
-    }
+/* ================= NAV ================= */
 
-    .c1 {
-        left: 8%;
-        top: 30%;
-        font-size: 55px;
-    }
+.nav{
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  padding:20px 10px 5px;
+}
 
-    .c2 {
-        right: 10%;
-        top: 22%;
-        font-size: 45px;
-    }
+.nav button{
+  background:transparent;
+  color:#7fa598;
+  border:1px solid #21493c;
+  padding:10px 18px;
+  border-radius:8px;
+}
 
-    .c3 {
-        left: 14%;
-        bottom: 17%;
-        font-size: 35px;
-    }
+.nav button.active,
+.nav button:hover{
+  color:var(--green);
+  border-color:var(--green);
+  background:rgba(0,255,174,.06);
+}
 
-    .c4 {
-        right: 14%;
-        bottom: 15%;
-        font-size: 55px;
-    }
+/* ================= SECTIONS ================= */
 
-    .c5 {
-        left: 25%;
-        top: 12%;
-        font-size: 25px;
-    }
+.section{
+  display:none;
+  width:min(1100px,92%);
+  margin:25px auto 50px;
+}
 
-    .c6 {
-        right: 27%;
-        bottom: 12%;
-        font-size: 25px;
-    }
+.section.active{
+  display:block;
+}
 
-    @keyframes float {
-        0%, 100% {
-            transform: translateY(0px);
-        }
+.title{
+  text-align:center;
+  margin:25px 0 8px;
+  font-size:34px;
+  letter-spacing:4px;
+}
 
-        50% {
-            transform: translateY(-20px);
-        }
-    }
+.subtitle{
+  text-align:center;
+  color:var(--muted);
+  margin-bottom:30px;
+}
 
-    /* โมเลกุลตรงกลาง */
-    .molecule {
-        position: absolute;
-        width: 500px;
-        height: 300px;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%);
-        z-index: 1;
-        opacity: 0.25;
-    }
+/* ================= HOME ================= */
 
-    .atom {
-        position: absolute;
-        width: 35px;
-        height: 35px;
-        border-radius: 50%;
-        background: #00ffae;
-        box-shadow:
-            0 0 15px #00ffae,
-            0 0 35px #00ffae;
-    }
+.hero{
+  min-height:330px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+}
 
-    .a1 {
-        left: 40%;
-        top: 20%;
-    }
+.hero h1{
+  font-size:clamp(50px,9vw,100px);
+  letter-spacing:8px;
+  text-shadow:0 0 10px white,0 0 35px var(--green);
+}
 
-    .a2 {
-        left: 20%;
-        top: 60%;
-    }
+.hero p{
+  color:var(--green);
+  letter-spacing:4px;
+  margin:10px 0 30px;
+}
 
-    .a3 {
-        left: 65%;
-        top: 65%;
-    }
+.stats{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:15px;
+}
 
-    .a4 {
-        left: 75%;
-        top: 20%;
-    }
+.stat{
+  background:var(--panel);
+  border:1px solid #174e3e;
+  padding:25px;
+  border-radius:12px;
+  text-align:center;
+}
 
-    .bond {
-        position: absolute;
-        height: 3px;
-        background: #00ffae;
-        transform-origin: left center;
-        box-shadow: 0 0 10px #00ffae;
-    }
+.stat strong{
+  display:block;
+  font-size:30px;
+  color:var(--green);
+  margin-top:8px;
+}
 
-    .b1 {
-        width: 130px;
-        left: 28%;
-        top: 48%;
-        transform: rotate(25deg);
-    }
+/* ================= QUIZ ================= */
 
-    .b2 {
-        width: 120px;
-        left: 43%;
-        top: 35%;
-        transform: rotate(50deg);
-    }
+.quiz-card{
+  background:var(--panel);
+  border:1px solid #174e3e;
+  border-radius:14px;
+  padding:22px;
+  margin-bottom:16px;
+}
 
-    .b3 {
-        width: 100px;
-        left: 60%;
-        top: 50%;
-        transform: rotate(-35deg);
-    }
+.quiz-card h3{
+  color:#dffff4;
+  margin-bottom:15px;
+  line-height:1.6;
+}
 
-    /* ข้อความมุมจอ */
-    .status {
-        position: absolute;
-        z-index: 20;
-        top: 25px;
-        left: 30px;
+.option{
+  display:block;
+  padding:12px;
+  margin:8px 0;
+  background:#061711;
+  border:1px solid #1b493b;
+  border-radius:8px;
+  cursor:pointer;
+}
 
-        color: #00ffae;
-        font-size: 12px;
-        letter-spacing: 2px;
-    }
+.option:hover{
+  border-color:var(--green);
+}
 
-    .status::before {
-        content: "● ";
-        animation: blink 1s infinite;
-    }
+.option input{
+  margin-right:10px;
+}
 
-    @keyframes blink {
-        50% {
-            opacity: 0.2;
-        }
-    }
+.quiz-result{
+  display:none;
+  text-align:center;
+  padding:25px;
+  margin:20px 0;
+  border:1px solid var(--green);
+  background:rgba(0,255,174,.06);
+  border-radius:12px;
+}
 
-    .version {
-        position: absolute;
-        bottom: 20px;
-        left: 30px;
-        color: #4b8976;
-        font-size: 11px;
-        letter-spacing: 2px;
-    }
+.score{
+  color:var(--green);
+  font-size:35px;
+  font-weight:bold;
+}
 
-    .sdg {
-        position: absolute;
-        bottom: 20px;
-        right: 30px;
-        color: #4b8976;
-        font-size: 11px;
-        letter-spacing: 2px;
-    }
+/* ================= GACHA ================= */
 
-    /* Responsive */
-    @media (max-width: 600px) {
+.gacha-box{
+  text-align:center;
+  padding:35px;
+  background:var(--panel);
+  border:1px solid #174e3e;
+  border-radius:18px;
+}
 
-        h1 {
-            font-size: 55px;
-            letter-spacing: 4px;
-        }
+.capsule{
+  width:170px;
+  height:210px;
+  margin:15px auto 30px;
+  border-radius:85px 85px 45px 45px;
+  background:linear-gradient(#dffff4,#22d89e 45%,#064b37);
+  border:3px solid var(--green);
+  box-shadow:0 0 25px var(--green),0 0 70px rgba(0,255,174,.35);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:55px;
+  color:#022016;
+  transition:.15s;
+}
 
-        .thai-title {
-            font-size: 14px;
-        }
+.capsule.shake{
+  animation:shake .7s ease-in-out;
+}
 
-        .login-btn {
-            width: 210px;
-        }
+@keyframes shake{
+  0%{transform:rotate(0)}
+  15%{transform:rotate(-12deg)}
+  30%{transform:rotate(12deg)}
+  45%{transform:rotate(-15deg)}
+  60%{transform:rotate(15deg)}
+  75%{transform:rotate(-8deg)}
+  100%{transform:rotate(0)}
+}
 
-        .chemical {
-            opacity: 0.35;
-        }
-    }
+.pull-btn{
+  padding:16px 35px;
+  border:2px solid var(--green);
+  border-radius:10px;
+  background:var(--green);
+  color:#00130c;
+  font-size:18px;
+  font-weight:bold;
+  box-shadow:0 0 20px rgba(0,255,174,.3);
+}
+
+.pull-btn:hover{
+  box-shadow:0 0 35px var(--green);
+  transform:scale(1.03);
+}
+
+.rates{
+  display:flex;
+  justify-content:center;
+  gap:15px;
+  flex-wrap:wrap;
+  margin-top:25px;
+  color:#9ab5ab;
+  font-size:13px;
+}
+
+/* ================= COLLECTION ================= */
+
+.collection{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(145px,1fr));
+  gap:15px;
+}
+
+.element{
+  min-height:170px;
+  background:#06110e;
+  border:2px solid #34423e;
+  border-radius:12px;
+  padding:18px;
+  text-align:center;
+  transition:.25s;
+}
+
+.element.unlocked:hover{
+  transform:translateY(-5px);
+}
+
+.symbol{
+  font-size:45px;
+  font-weight:900;
+  margin-bottom:5px;
+}
+
+.atomic{
+  font-size:12px;
+  color:#78998d;
+}
+
+.element-name{
+  margin:8px 0;
+  font-weight:bold;
+}
+
+.rarity{
+  font-size:11px;
+  letter-spacing:2px;
+  font-weight:bold;
+}
+
+.locked{
+  filter:brightness(.25);
+}
+
+.lock-icon{
+  font-size:50px;
+  margin:20px 0;
+}
+
+/* rarity colors */
+
+.common{border-color:#8a9390}
+.common .symbol,.common .rarity{color:#b8c0bd}
+
+.rare{border-color:#348cff}
+.rare .symbol,.rare .rarity{color:#4da1ff}
+
+.epic{border-color:#b15cff}
+.epic .symbol,.epic .rarity{color:#c77aff}
+
+.legendary{
+  border-color:#ffd43b;
+  box-shadow:0 0 18px rgba(255,212,59,.35);
+}
+
+.legendary .symbol,.legendary .rarity{
+  color:#ffd43b;
+  text-shadow:0 0 15px #ffd43b;
+}
+
+/* ================= REVEAL ================= */
+
+.modal{
+  display:none;
+  position:fixed;
+  inset:0;
+  z-index:100;
+  background:rgba(0,0,0,.85);
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+}
+
+.modal.show{
+  display:flex;
+}
+
+.reveal{
+  width:min(400px,95%);
+  text-align:center;
+  padding:35px;
+  background:#06130f;
+  border-radius:20px;
+  border:2px solid var(--green);
+  box-shadow:0 0 60px rgba(0,255,174,.3);
+  animation:pop .4s ease;
+}
+
+@keyframes pop{
+  from{transform:scale(.5);opacity:0}
+  to{transform:scale(1);opacity:1}
+}
+
+.reveal .symbol{
+  font-size:90px;
+}
+
+.reveal h2{
+  font-size:28px;
+  margin:8px 0;
+}
+
+.reveal-info{
+  color:#91afa4;
+  line-height:1.8;
+}
+
+.continue{
+  margin-top:25px;
+  padding:12px 30px;
+  background:var(--green);
+  color:#00140d;
+  border:0;
+  border-radius:8px;
+  font-weight:bold;
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media(max-width:650px){
+
+  header{
+    padding:0 15px;
+  }
+
+  .brand{
+    font-size:13px;
+  }
+
+  .header-right{
+    gap:7px;
+  }
+
+  .logout{
+    display:none;
+  }
+
+  .coins{
+    font-size:13px;
+    padding:7px 10px;
+  }
+
+  .stats{
+    grid-template-columns:1fr;
+  }
+
+  .nav{
+    overflow-x:auto;
+    justify-content:flex-start;
+    padding-left:15px;
+  }
+
+  .nav button{
+    white-space:nowrap;
+  }
+
+  .section{
+    width:94%;
+  }
+
+  .title{
+    font-size:25px;
+  }
+
+  .hero h1{
+    font-size:50px;
+    letter-spacing:4px;
+  }
+
+  .gacha-box{
+    padding:20px 12px;
+  }
+}
 </style>
 </head>
 
 <body>
 
-<div class="screen">
+<div class="app">
+<div class="orb"></div>
 
-    <!-- พื้นหลัง -->
-    <div class="grid"></div>
-    <div class="glow"></div>
+<!-- ================= LOGIN PAGE ================= -->
 
-    <!-- เส้นตกแต่ง -->
-    <div class="line line1"></div>
-    <div class="line line2"></div>
+<section id="loginPage">
 
-    <!-- สถานะ -->
-    <div class="status">
-        SYSTEM ONLINE
+  <div class="login-box">
+
+    <div class="logo">CHEM</div>
+
+    <div class="login-sub">
+      SCI-FI CHEMISTRY SYSTEM
     </div>
 
-    <!-- สัญลักษณ์เคมี -->
-    <div class="chemical c1">H₂</div>
-    <div class="chemical c2">O₂</div>
-    <div class="chemical c3">Na⁺</div>
-    <div class="chemical c4">Cl⁻</div>
-    <div class="chemical c5">C₆H₁₂O₆</div>
-    <div class="chemical c6">H₂O</div>
+    <input
+      id="username"
+      class="input"
+      type="text"
+      placeholder="ชื่อผู้เล่น"
+    >
 
-    <!-- โมเลกุล -->
-    <div class="molecule">
+    <input
+      id="password"
+      class="input"
+      type="password"
+      placeholder="รหัสผ่าน"
+    >
 
-        <div class="atom a1"></div>
-        <div class="atom a2"></div>
-        <div class="atom a3"></div>
-        <div class="atom a4"></div>
+    <button class="main-btn" onclick="login()">
+      LOGIN
+    </button>
 
-        <div class="bond b1"></div>
-        <div class="bond b2"></div>
-        <div class="bond b3"></div>
+    <p style="margin-top:20px;color:#668b7e;font-size:12px">
+      SDG 4 • QUALITY EDUCATION
+    </p>
 
+  </div>
+
+</section>
+
+
+<!-- ================= GAME ================= -->
+
+<section id="gamePage">
+
+<header>
+
+  <div class="brand">
+    🧪 CHEM GAME
+  </div>
+
+  <div class="header-right">
+
+    <div class="coins">
+      🪙 <span id="coinDisplay">500</span>
     </div>
 
-    <!-- เนื้อหาหลัก -->
-    <div class="content">
+    <button class="logout" onclick="logout()">
+      LOGOUT
+    </button>
 
-        <div class="subtitle">
-            CHEMISTRY LEARNING SYSTEM
-        </div>
+  </div>
 
-        <h1>CHEM GAME</h1>
+</header>
 
-        <div class="thai-title">
-            เกมผจญภัยในโลกแห่งเคมี
-        </div>
 
-        <button class="login-btn" onclick="login()">
-            LOGIN
-        </button>
+<div class="nav">
 
+  <button class="active" onclick="showSection('home',this)">
+    HOME
+  </button>
+
+  <button onclick="showSection('quiz',this)">
+    🧪 QUIZ
+  </button>
+
+  <button onclick="showSection('gacha',this)">
+    ✨ GACHA
+  </button>
+
+  <button onclick="showSection('collection',this)">
+    🎒 COLLECTION
+  </button>
+
+</div>
+
+
+<!-- ================= HOME ================= -->
+
+<div id="home" class="section active">
+
+  <div class="hero">
+
+    <p>CHEMISTRY LEARNING SYSTEM</p>
+
+    <h1>CHEM GAME</h1>
+
+    <p>LEARN • PLAY • COLLECT</p>
+
+    <button class="main-btn"
+      style="max-width:250px"
+      onclick="showSection('quiz')">
+      START QUIZ
+    </button>
+
+  </div>
+
+  <div class="stats">
+
+    <div class="stat">
+      COINS
+      <strong id="homeCoins">500</strong>
     </div>
 
-    <div class="version">
-        CHEM-GAME // VERSION 1.0
+    <div class="stat">
+      ELEMENTS
+      <strong id="elementCount">0 / 17</strong>
     </div>
 
-    <div class="sdg">
-        SDG 4 // QUALITY EDUCATION
+    <div class="stat">
+      QUIZ
+      <strong id="quizCount">0</strong>
     </div>
+
+  </div>
+
+</div>
+
+
+<!-- ================= QUIZ ================= -->
+
+<div id="quiz" class="section">
+
+  <h2 class="title">CHEMISTRY QUIZ</h2>
+
+  <p class="subtitle">
+    ตอบคำถามเพื่อรับเหรียญและนำไปสุ่มธาตุ
+  </p>
+
+  <div id="quizContainer"></div>
+
+  <button class="main-btn" onclick="submitQuiz()">
+    SUBMIT QUIZ
+  </button>
+
+  <div id="quizResult" class="quiz-result"></div>
+
+</div>
+
+
+<!-- ================= GACHA ================= -->
+
+<div id="gacha" class="section">
+
+  <h2 class="title">ELEMENT GACHA</h2>
+
+  <p class="subtitle">
+    สุ่มธาตุเพื่อปลดล็อก Collection ของคุณ
+  </p>
+
+  <div class="gacha-box">
+
+    <div id="capsule" class="capsule">
+      ?
+    </div>
+
+    <h3 style="margin-bottom:20px">
+      ELEMENT CAPSULE
+    </h3>
+
+    <button
+      id="pullButton"
+      class="pull-btn"
+      onclick="pullGacha()">
+      PULL 1X • 100 COINS
+    </button>
+
+    <div class="rates">
+      <span>⚪ Common 60%</span>
+      <span>🔵 Rare 25%</span>
+      <span>🟣 Epic 10%</span>
+      <span>🟡 Legendary 5%</span>
+    </div>
+
+    <button
+      class="main-btn"
+      style="margin-top:20px;max-width:280px"
+      onclick="simulateQuiz()">
+      + EARN 100 COINS
+    </button>
+
+    <p style="margin-top:10px;color:#698f81;font-size:12px">
+      Prototype: จำลองการทำ Quiz เพื่อรับเหรียญ
+    </p>
+
+  </div>
+
+</div>
+
+
+<!-- ================= COLLECTION ================= -->
+
+<div id="collection" class="section">
+
+  <h2 class="title">ELEMENT COLLECTION</h2>
+
+  <p class="subtitle">
+    ELEMENTS COLLECTED:
+    <span id="collectionCount">0</span> / 17
+  </p>
+
+  <div id="collectionGrid" class="collection"></div>
+
+</div>
+
+</section>
+
+
+<!-- ================= REVEAL MODAL ================= -->
+
+<div id="revealModal" class="modal">
+
+  <div id="revealBox" class="reveal">
+
+    <div id="revealSymbol" class="symbol"></div>
+
+    <h2 id="revealName"></h2>
+
+    <div id="revealInfo" class="reveal-info"></div>
+
+    <button class="continue" onclick="closeReveal()">
+      CONTINUE
+    </button>
+
+  </div>
+
+</div>
 
 </div>
 
 
 <script>
 
-function login() {
+/* =====================================================
+   DATA
+===================================================== */
 
-    // แสดงข้อความเมื่อกด Login
-    alert("เข้าสู่ระบบ Chem Game");
+const elements = [
 
-    // หากมีหน้าล็อกอิน สามารถเปลี่ยนเป็น
-    // window.location.href = "login.html";
+  // COMMON 60%
+  {symbol:"H",name:"Hydrogen",thai:"ไฮโดรเจน",atomic:1,rarity:"Common",class:"common"},
+  {symbol:"C",name:"Carbon",thai:"คาร์บอน",atomic:6,rarity:"Common",class:"common"},
+  {symbol:"O",name:"Oxygen",thai:"ออกซิเจน",atomic:8,rarity:"Common",class:"common"},
+  {symbol:"N",name:"Nitrogen",thai:"ไนโตรเจน",atomic:7,rarity:"Common",class:"common"},
+  {symbol:"Na",name:"Sodium",thai:"โซเดียม",atomic:11,rarity:"Common",class:"common"},
+  {symbol:"Cl",name:"Chlorine",thai:"คลอรีน",atomic:17,rarity:"Common",class:"common"},
+
+  // RARE 25%
+  {symbol:"Fe",name:"Iron",thai:"เหล็ก",atomic:26,rarity:"Rare",class:"rare"},
+  {symbol:"Cu",name:"Copper",thai:"ทองแดง",atomic:29,rarity:"Rare",class:"rare"},
+  {symbol:"Zn",name:"Zinc",thai:"สังกะสี",atomic:30,rarity:"Rare",class:"rare"},
+  {symbol:"Ag",name:"Silver",thai:"เงิน",atomic:47,rarity:"Rare",class:"rare"},
+
+  // EPIC 10%
+  {symbol:"Pt",name:"Platinum",thai:"แพลทินัม",atomic:78,rarity:"Epic",class:"epic"},
+  {symbol:"Au",name:"Gold",thai:"ทองคำ",atomic:79,rarity:"Epic",class:"epic"},
+  {symbol:"Hg",name:"Mercury",thai:"ปรอท",atomic:80,rarity:"Epic",class:"epic"},
+
+  // LEGENDARY 5%
+  {symbol:"U",name:"Uranium",thai:"ยูเรเนียม",atomic:92,rarity:"Legendary",class:"legendary"},
+  {symbol:"Pu",name:"Plutonium",thai:"พลูโทเนียม",atomic:94,rarity:"Legendary",class:"legendary"},
+  {symbol:"Fr",name:"Francium",thai:"แฟรนเซียม",atomic:87,rarity:"Legendary",class:"legendary"}
+
+];
+
+
+/* =====================================================
+   QUIZ DATA
+===================================================== */
+
+const quizQuestions = [
+
+ {
+  q:"อนุภาคใดมีประจุไฟฟ้าเป็นลบ?",
+  a:["โปรตอน","นิวตรอน","อิเล็กตรอน","นิวเคลียส"],
+  correct:2
+ },
+
+ {
+  q:"เลขอะตอมหมายถึงจำนวนใด?",
+  a:["นิวตรอน","โปรตอน","โปรตอน + นิวตรอน","อิเล็กตรอน + นิวตรอน"],
+  correct:1
+ },
+
+ {
+  q:"Na มีเลขอะตอม 11 ในอะตอมที่เป็นกลางมีอิเล็กตรอนกี่ตัว?",
+  a:["10","11","12","22"],
+  correct:1
+ },
+
+ {
+  q:"ข้อใดเป็นโลหะ?",
+  a:["Na","Cl","O","Ne"],
+  correct:0
+ },
+
+ {
+  q:"พันธะไอออนิกเกิดจากการยึดเหนี่ยวระหว่างอะไร?",
+  a:["โลหะกับโลหะ","อโลหะกับอโลหะ","ไอออนบวกกับไอออนลบ","โปรตอนกับนิวตรอน"],
+  correct:2
+ },
+
+ {
+  q:"สูตรเคมีของโซเดียมคลอไรด์คือข้อใด?",
+  a:["NaCl","NaCl₂","Na₂Cl","Na₂Cl₂"],
+  correct:0
+ },
+
+ {
+  q:"ธาตุใดมีแนวโน้มรับอิเล็กตรอนได้ง่าย?",
+  a:["Na","Mg","Cl","K"],
+  correct:2
+ },
+
+ {
+  q:"ออกซิเจนมีอิเล็กตรอนเวเลนซ์กี่ตัว?",
+  a:["2","4","6","8"],
+  correct:2
+ },
+
+ {
+  q:"ข้อใดเป็นสารประกอบ?",
+  a:["O₂","Fe","H₂O","N₂"],
+  correct:2
+ },
+
+ {
+  q:"ข้อใดเป็นธาตุหมู่ 18?",
+  a:["Na","Cl","Ne","Mg"],
+  correct:2
+ },
+
+ {
+  q:"มวลโมเลกุลของ H₂O เมื่อ H=1 และ O=16 เท่ากับเท่าใด?",
+  a:["17","18","19","20"],
+  correct:1
+ },
+
+ {
+  q:"NaCl มีมวลเท่าใด เมื่อ Na=23 และ Cl=35.5?",
+  a:["46.5","58.5","60.5","62.5"],
+  correct:1
+ },
+
+ {
+  q:"สารละลายคืออะไร?",
+  a:["สารบริสุทธิ์","สารผสมเนื้อเดียว","สารผสมเนื้อผสม","ธาตุทุกชนิด"],
+  correct:1
+ },
+
+ {
+  q:"เกลือ 10 g ละลายในน้ำ 90 g สารละลายมีมวลเท่าใด?",
+  a:["80 g","90 g","100 g","110 g"],
+  correct:2
+ },
+
+ {
+  q:"ค่า pH น้อยกว่า 7 แสดงว่าสารมีสมบัติใด?",
+  a:["กรด","เบส","กลาง","โลหะ"],
+  correct:0
+ },
+
+ {
+  q:"ข้อใดเป็นกรด?",
+  a:["NaOH","HCl","KOH","NH₃"],
+  correct:1
+ },
+
+ {
+  q:"ปฏิกิริยาระหว่างกรดกับเบสเรียกว่าอะไร?",
+  a:["การเผาไหม้","การตกตะกอน","การสะเทิน","การระเหย"],
+  correct:2
+ },
+
+ {
+  q:"สมการใดดุลแล้ว?",
+  a:["H₂ + O₂ → H₂O","2H₂ + O₂ → 2H₂O","H₂ + 2O₂ → H₂O","2H₂ + 2O₂ → H₂O"],
+  correct:1
+ },
+
+ {
+  q:"จาก 2H₂ + O₂ → 2H₂O อัตราส่วน H₂ : O₂ คือเท่าใด?",
+  a:["1:1","1:2","2:1","2:2"],
+  correct:2
+ },
+
+ {
+  q:"ถ้ามี H₂ 4 mol จะเกิด H₂O กี่ mol จาก 2H₂ + O₂ → 2H₂O?",
+  a:["2","4","6","8"],
+  correct:1
+ }
+
+];
+
+
+/* =====================================================
+   STATE
+===================================================== */
+
+let coins = Number(localStorage.getItem("chemCoins"));
+
+if(isNaN(coins)){
+  coins = 500;
+}
+
+let inventory =
+  JSON.parse(localStorage.getItem("chemInventory")) || [];
+
+let quizCompleted =
+  Number(localStorage.getItem("chemQuizCompleted")) || 0;
+
+
+/* =====================================================
+   LOGIN
+===================================================== */
+
+function login(){
+
+  const username =
+    document.getElementById("username").value.trim();
+
+  if(username === ""){
+    alert("กรุณาใส่ชื่อผู้เล่น");
+    return;
+  }
+
+  localStorage.setItem("chemUsername",username);
+
+  document.getElementById("loginPage").style.display="none";
+  document.getElementById("gamePage").style.display="block";
+
+  updateUI();
+  renderCollection();
+}
+
+
+/* =====================================================
+   LOGOUT
+===================================================== */
+
+function logout(){
+
+  document.getElementById("gamePage").style.display="none";
+  document.getElementById("loginPage").style.display="flex";
+
+}
+
+
+/* =====================================================
+   SECTION NAVIGATION
+===================================================== */
+
+function showSection(id,button){
+
+  document.querySelectorAll(".section")
+    .forEach(section => section.classList.remove("active"));
+
+  document.getElementById(id).classList.add("active");
+
+  document.querySelectorAll(".nav button")
+    .forEach(btn => btn.classList.remove("active"));
+
+  if(button){
+    button.classList.add("active");
+  }
+
+  if(id==="collection"){
+    renderCollection();
+  }
+
+}
+
+
+/* =====================================================
+   UI UPDATE
+===================================================== */
+
+function updateUI(){
+
+  document.getElementById("coinDisplay").textContent=coins;
+  document.getElementById("homeCoins").textContent=coins;
+
+  document.getElementById("elementCount").textContent =
+    inventory.length + " / " + elements.length;
+
+  document.getElementById("collectionCount").textContent =
+    inventory.length;
+
+  document.getElementById("quizCount").textContent =
+    quizCompleted;
+
+  localStorage.setItem("chemCoins",coins);
+  localStorage.setItem("chemInventory",JSON.stringify(inventory));
+  localStorage.setItem("chemQuizCompleted",quizCompleted);
+
+}
+
+
+/* =====================================================
+   QUIZ RENDER
+===================================================== */
+
+function renderQuiz(){
+
+  const container =
+    document.getElementById("quizContainer");
+
+  container.innerHTML="";
+
+  quizQuestions.forEach((item,index)=>{
+
+    let html=`
+      <div class="quiz-card">
+        <h3>${index+1}. ${item.q}</h3>
+    `;
+
+    item.a.forEach((option,i)=>{
+
+      html+=`
+        <label class="option">
+          <input
+            type="radio"
+            name="question${index}"
+            value="${i}">
+          ${String.fromCharCode(65+i)}. ${option}
+        </label>
+      `;
+
+    });
+
+    html+="</div>";
+
+    container.innerHTML+=html;
+
+  });
+
+}
+
+renderQuiz();
+
+
+/* =====================================================
+   SUBMIT QUIZ
+===================================================== */
+
+function submitQuiz(){
+
+  let score=0;
+
+  quizQuestions.forEach((item,index)=>{
+
+    const selected =
+      document.querySelector(
+        `input[name="question${index}"]:checked`
+      );
+
+    if(selected &&
+       Number(selected.value)===item.correct){
+
+      score++;
+
+    }
+
+  });
+
+  if(score===0){
+    alert("กรุณาตอบคำถามอย่างน้อย 1 ข้อ");
+    return;
+  }
+
+  const earned = score * 10;
+
+  coins += earned;
+  quizCompleted++;
+
+  updateUI();
+
+  const result =
+    document.getElementById("quizResult");
+
+  result.style.display="block";
+
+  result.innerHTML=`
+    <div class="score">${score} / 20</div>
+    <p style="margin-top:10px">
+      คุณได้รับ 🪙 <b>${earned}</b> Coins
+    </p>
+    <p style="margin-top:8px;color:#8fb3a7">
+      ทำ Quiz ได้เหรียญแล้ว นำไปสุ่มธาตุใน Gacha ได้เลย!
+    </p>
+  `;
+
+  window.scrollTo({
+    top:result.offsetTop-100,
+    behavior:"smooth"
+  });
+
+}
+
+
+/* =====================================================
+   SIMULATE QUIZ
+===================================================== */
+
+function simulateQuiz(){
+
+  coins += 100;
+
+  updateUI();
+
+  alert("🎉 จำลองการทำ Quiz สำเร็จ! ได้รับ 100 Coins");
+
+}
+
+
+/* =====================================================
+   GACHA DROP RATE
+===================================================== */
+
+function chooseRarity(){
+
+  const random=Math.random()*100;
+
+  if(random<60){
+    return "Common";
+  }
+
+  if(random<85){
+    return "Rare";
+  }
+
+  if(random<95){
+    return "Epic";
+  }
+
+  return "Legendary";
+
+}
+
+
+/* =====================================================
+   GACHA PULL
+===================================================== */
+
+function pullGacha(){
+
+  if(coins<100){
+    alert("❌ Coins ไม่พอ! ต้องมีอย่างน้อย 100 Coins");
+    return;
+  }
+
+  coins-=100;
+  updateUI();
+
+  const capsule =
+    document.getElementById("capsule");
+
+  const button =
+    document.getElementById("pullButton");
+
+  button.disabled=true;
+
+  capsule.classList.remove("shake");
+
+  void capsule.offsetWidth;
+
+  capsule.classList.add("shake");
+
+  setTimeout(()=>{
+
+    const rarity=chooseRarity();
+
+    const possible =
+      elements.filter(e=>e.rarity===rarity);
+
+    const element =
+      possible[
+        Math.floor(Math.random()*possible.length)
+      ];
+
+    if(!inventory.includes(element.symbol)){
+
+      inventory.push(element.symbol);
+
+    }
+
+    updateUI();
+    renderCollection();
+    showReveal(element);
+
+    button.disabled=false;
+
+  },900);
+
+}
+
+
+/* =====================================================
+   REVEAL
+===================================================== */
+
+function showReveal(element){
+
+  const modal =
+    document.getElementById("revealModal");
+
+  const box =
+    document.getElementById("revealBox");
+
+  box.className="reveal "+element.class;
+
+  document.getElementById("revealSymbol")
+    .textContent=element.symbol;
+
+  document.getElementById("revealName")
+    .textContent=element.name;
+
+  document.getElementById("revealInfo").innerHTML=`
+    <div>ชื่อไทย: ${element.thai}</div>
+    <div>เลขอะตอม: ${element.atomic}</div>
+    <div class="rarity">${element.rarity.toUpperCase()}</div>
+  `;
+
+  modal.classList.add("show");
+
+}
+
+
+/* =====================================================
+   CLOSE REVEAL
+===================================================== */
+
+function closeReveal(){
+
+  document
+    .getElementById("revealModal")
+    .classList.remove("show");
+
+  document.getElementById("capsule")
+    .classList.remove("shake");
+
+  document.getElementById("capsule")
+    .textContent="?";
+
+}
+
+
+/* =====================================================
+   COLLECTION
+===================================================== */
+
+function renderCollection(){
+
+  const grid =
+    document.getElementById("collectionGrid");
+
+  grid.innerHTML="";
+
+  elements.forEach(element=>{
+
+    const unlocked =
+      inventory.includes(element.symbol);
+
+    if(unlocked){
+
+      grid.innerHTML+=`
+
+        <div class="element unlocked ${element.class}">
+
+          <div class="symbol">
+            ${element.symbol}
+          </div>
+
+          <div class="atomic">
+            ATOMIC NUMBER ${element.atomic}
+          </div>
+
+          <div class="element-name">
+            ${element.name}
+          </div>
+
+          <div class="rarity">
+            ${element.rarity}
+          </div>
+
+        </div>
+
+      `;
+
+    }else{
+
+      grid.innerHTML+=`
+
+        <div class="element locked">
+
+          <div class="lock-icon">
+            🔒
+          </div>
+
+          <div class="rarity">
+            UNKNOWN ELEMENT
+          </div>
+
+        </div>
+
+      `;
+
+    }
+
+  });
+
+}
+
+
+/* =====================================================
+   AUTO LOGIN
+===================================================== */
+
+const savedUser =
+  localStorage.getItem("chemUsername");
+
+if(savedUser){
+
+  document.getElementById("loginPage")
+    .style.display="none";
+
+  document.getElementById("gamePage")
+    .style.display="block";
+
+  updateUI();
+  renderCollection();
 
 }
 
@@ -434,3 +1441,4 @@ function login() {
 
 </body>
 </html>
+```
